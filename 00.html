@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin:0;
+            padding:0;
+
+        }
+        #demo {
+            display: block;
+            width: 400px;
+            height: 255px;
+            margin: 50px;
+            position: relative;
+            /*border: 1px solid #CCCCCC;*/
+        }
+
+        #float-box {
+            display: none;
+            width: 160px;
+            height: 120px;
+            position: absolute;
+            background: #ffffcc;
+            border: 1px solid #CCCCCC;
+            filter: alpha(opacity=50);
+            opacity: 0.5;
+            cursor: move;
+        }
+
+        #big-box {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 460px;
+            width: 480px;
+            height: 360px;
+            overflow: hidden;
+            border: 1px solid #CCCCCC;
+            z-index: 1;
+        }
+
+        #big-box img {
+            position: absolute;
+            z-index: 5;
+        }
+
+        #small-box {
+            position: relative;
+            z-index: 1;
+            /*width:300px;*/
+            /*height:300px;*/
+        }
+        #small-box img{
+            width:100%;
+            height: 100%;
+        }
+
+    </style>
+</head>
+<body>
+<div id="demo">
+    <div id="small-box">
+        <div id="float-box"></div>
+        <img src="images/small.jpg">
+    </div>
+    <div id="big-box">
+        <img src="images/big.jpg"id="bigImg" ></div>
+</div>
+</body>
+</html>
+<script>
+    //获取DOM对象
+    var demo = document.getElementById('demo');
+    var small = document.getElementById('small-box');
+    var float = document.getElementById('float-box');
+    var big = document.getElementById('big-box');
+    var bigImg = document.getElementById('bigImg');
+    //滑入放大镜显示
+    small.onmouseover = function () {
+        float.style['display'] = 'block';
+        big.style['display'] = 'block';
+    }
+    //滑出放大镜隐藏
+    small.onmouseout = function () {
+        float.style['display'] = 'none';
+        big.style['display'] = 'none';
+    }
+    //移动时显示放大图片
+    small.onmousemove = function (event) {
+        var e = event || window.event;
+        //获取放大镜盒子的left和top值
+        var left = e.clientX - demo.offsetLeft - small.offsetLeft - float.offsetWidth / 2;
+        var top = e.clientY - demo.offsetTop - small.offsetTop- float.offsetHeight / 2;
+        //放大镜盒子边界设置
+        if (left < 0) {
+            left = 0;
+        } else if (left > small.offsetWidth - float.offsetWidth) {
+            left = small.offsetWidth - float.offsetWidth;
+        }
+        if (top < 0) {
+            top = 0;
+
+        } else if (top > small.offsetHeight - float.offsetHeight) {
+            top = small.offsetHeight - float.offsetHeight;
+        }
+        //放大镜盒子的css设置
+        float.style['left'] = left + 'px';
+        float.style['top'] = top + 'px';
+        //放大镜显示图片的位置
+        var percentX = left / (small.offsetWidth - float.offsetWidth);
+        var percentY = top / (small.offsetHeight - float.offsetHeight);
+        var bx = percentX * (bigImg.offsetWidth - big.offsetWidth);
+        var by = percentY * (bigImg.offsetHeight - big.offsetHeight);
+        bigImg.style['left'] = -bx + 'px';
+        bigImg.style['top'] = -by + 'px';
+}
+</script>
